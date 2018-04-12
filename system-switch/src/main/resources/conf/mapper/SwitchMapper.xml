@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.2//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hua.mapper.SwitchMapper">
+
+	<!--  根据编码获取单个配置对象 -->
+	<select id="getByCode" parameterType="string" resultType="com.hua.entity.SwitchEntity">
+		<![CDATA[
+			select a.ID as id, a.CODE as code, a.PARENT_CODE as parentCode, a.NAME as name, 
+			a.TYPE as type, a.VALUE as value, a.ISOLATED as isolated, a.STATUS as status,  
+			a.DESCRIPTION as description, a.REMARK as remark, a.CREATE_DT as createDateTime,  
+			a.UPDATE_DT as updateDateTime
+			from T_SWITCH_CONFIG a where a.code = #{code} and a.status = 1
+			]]>
+	</select>
+
+	<!--  根据编码获取单个简单配置对象 -->
+	<select id="getSimpleByCode" parameterType="string" resultType="com.hua.entity.SwitchEntity">
+		<![CDATA[
+			select a.ID as id, a.CODE as code, a.NAME as name, a.VALUE as value, 
+			a.STATUS as status, a.REMARK as remark, a.CREATE_DT as createDateTime
+			from T_SWITCH_CONFIG_SIMPLE a where a.code = #{code} and a.status = 1
+			]]>
+	</select>
+	
+</mapper>

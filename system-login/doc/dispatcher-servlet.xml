@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+	
+	<context:property-placeholder location="classpath:config.properties" />
+	
+	<aop:aspectj-autoproxy />
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.plateno.o2omember" use-default-filters="false" >
+		 <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    	 <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />  
+	</context:component-scan>
+		
+	<!-- 	
+	<mvc:view-controller path="/" view-name="${web.home}" />
+	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="31556926" />
+	 -->
+	<mvc:resources location="/download/" mapping="/download/**" cache-period="31556926" />
+	<mvc:resources location="/css/" mapping="/css/**" cache-period="31556926" />
+	<mvc:resources location="/js/" mapping="/js/**" cache-period="31556926" />
+	<mvc:resources location="/img/" mapping="/img/**" cache-period="31556926" />
+	
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+	
+		<!--  sign auth  -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/o2o/api/wx/**" />
+			<mvc:exclude-mapping path="/gift/payGiftCallback/v1" />
+			<mvc:exclude-mapping path="/download/**"/>
+			<mvc:exclude-mapping path="/test/**"/>
+			<mvc:exclude-mapping path="/resource/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/img/**"/>
+			<bean class="com.plateno.o2omember.webapi.interceptor.SignInterceptor" />
+		</mvc:interceptor>
+		
+		<!--  login auth  -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/test/**"/>
+			<mvc:exclude-mapping path="/login/**"/>
+			<mvc:exclude-mapping path="/sms/**" />
+			<mvc:exclude-mapping path="/o2o/api/wx/**" />
+			<mvc:exclude-mapping path="/gift/payGiftCallback/v1" />
+			<mvc:exclude-mapping path="/gift/isGiftExist/v1" />
+			<mvc:exclude-mapping path="/gift/isGiftCanPay/v1" />
+			<mvc:exclude-mapping path="/statis/rebuild/**" />
+			<mvc:exclude-mapping path="/accountBind/**" />									
+			<mvc:exclude-mapping path="/rebuild/**" />
+			<mvc:exclude-mapping path="/download/**"/>
+			<mvc:exclude-mapping path="/resource/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/img/**"/>
+			<bean class="com.plateno.o2omember.webapi.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+		
+	</mvc:interceptors>
+	
+	<!-- 
+	<bean  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		 
+		<property name="exposeRequestAttributes" value="true"></property>
+		<property name="exposeSessionAttributes" value="true"></property>
+		 
+		<property name="contentType" value="text/html;charset=utf-8"></property>
+		<property name="cache" value="false"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=""/>
+	
+		<property name="attributesMap">
+          <map>
+            <entry key="removeDoubleElement"><bean class="com.plateno.component.core.web.FreemarkerListMethod" /></entry>
+          </map>
+        </property>
+		
+	</bean>
+	 -->
+	
+	<!-- regist jsp view  -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	
+	<!-- regist json , html/text view -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+ 		<property name="order" value="1" />
+	</bean>
+	
+	<!-- set spring upload file max size -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	  <property name="maxUploadSize" value="5000000" />
+	</bean>
+	
+</beans>

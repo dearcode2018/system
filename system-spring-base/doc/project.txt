@@ -1,0 +1,50 @@
+【项目信息】
+项目名称 : system-spring-base
+中文名称 : system-spring-base
+项目版本 : version 1.0
+
+主要技术 : 
+
+项目描述 : 以spring web 作为基础环境，集成 spring mvc / spring test / orm(mysql/mybaits/jdbc/dbcp) / 
+cache (redis) 
+
+项目备注 : 
+
+【项目规划】
+
+1)
+
+2)
+
+3)
+
+4)
+
+5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

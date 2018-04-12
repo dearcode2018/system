@@ -1,0 +1,116 @@
+
+1、VIP的设计
+公用参数
+
+每一个请求需带的公用参数：
+
+ 
+
+api_key APP_KEY，每一个应用单独的区别（iOS和Android版本需要使用不同的）
+
+app_name 应用名称
+
+app_version 应用版本
+
+uuid Android的imei号或者iPhone的uuid（针对app）
+
+format 响应的请求format
+
+channel 渠道ID（一般用于Android区别来源） 
+
+ timestamp 请求时候的客户端时间戳 
+
+warehouse 分仓信息（不一定需要的公用信息）
+
+
+封签方法
+
+用户登陆之后会返回：user_token, user_secret
+
+未登陆：SHA1(api_secret+implode(“”,array_values(ksort(common_params))))
+
+已登陆：添加参数user_token，SHA1(api_secret+“&”+user_screct+implode(“”,array_values(ksort(common_params))))
+
+
+说明：ksort 、array_values、implode都是PHP的函数，意义请自行baidu.com。
+与微信的签名差异
+
+nonceStr 随机字符串
+
+字符串连接使用QueryString连接方式
+
+
+与OAuth2.0差异
+
+urlencode
+
+signature_method：OAuth2有多种signature的生成方法
+
+oauth_version：OAuth有不同的版本，所以需要制定版本
+
+
+缺点：没有考虑超时的expireTime
+2、
+
+deviceInformation 仅在登陆和注册时候提供还有系统升级接口使用
+
+os  iPhone上全部为"iOS" ，而Android怎根据系统获得
+
+osver  系统版本
+
+model  硬件版本
+
+brand "Applde"，Android根据系统获取
+
+ver APP版本
+
+vernm 内部版本，用于升级
+
+width 屏幕宽度
+
+height 屏幕高度
+
+dpi 屏幕分辨率
+
+iccid mac地址的md5字符串
+
+channel 渠道
+
+
+签名方法
+
+分发两个Token，一个RefreshToken，一个UserToken，分别有对应的过期时间 RefreshExpireTime， UserTokenExpireTime，RefreshExpireTime时限比较长，UserTokenExpireTime时间比较短，当UserToken过期，使用RefreshToken获取新的UserToken
+
+ 
+
+Des签名
+
+base64(des(UserToken,utf8_data(md5(mac_address)+ "|"+nonceStr )))
+
+ 
+
+缺点：所有应用的接口都需要登陆后使用，应该把参数纳入数字签名范围
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
